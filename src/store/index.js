@@ -1,10 +1,11 @@
-import {configureStore} from '@reduxjs/toolkit';
-import {iTunesApi} from './iTunesApi';
+import { configureStore } from "@reduxjs/toolkit";
+import { iTunesApi } from "./iTunesApi";
 
 export default configureStore({
-    reducer: {
-        [iTunesApi.reducerPath]: iTunesApi.reducer,
-    },
+  reducer: {
+    [iTunesApi.reducerPath]: iTunesApi.reducer,
+  },
 
-    middleware: getDefaultMiddleware => getDefaultMiddleware().concat(iTunesApi.middleware)
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(iTunesApi.middleware),
 });

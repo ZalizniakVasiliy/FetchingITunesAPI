@@ -10,14 +10,13 @@
     "@reduxjs/toolkit": "^1.8.3",
     "@rsuite/icons": "^1.0.2",
     "bootstrap": "^5.2.3",
-    "formik": "^2.2.9",
+    "prettier": "^2.8.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.6.0",
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-scripts": "5.0.1",
-    "rsuite": "^5.22.2",
-    "yup": "^0.32.11"
+    "rsuite": "^5.22.2"
   },
   "scripts": {
     "start": "react-scripts start",
