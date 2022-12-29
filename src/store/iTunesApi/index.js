@@ -10,9 +10,11 @@ export const iTunesApi = createApi({
   endpoints: (build) => ({
     getArtistData: build.query({
       query: (artist) =>
-        `search?term=${encodeURI(artist).replaceAll("%20", "+")}&media=music`,
+        `search?term=${encodeURI(artist)
+          .toLowerCase()
+          .replaceAll("%20", "+")}&media=music`,
     }),
   }),
 });
 
-export const { useGetArtistDataQuery } = iTunesApi;
+export const { useLazyGetArtistDataQuery } = iTunesApi;

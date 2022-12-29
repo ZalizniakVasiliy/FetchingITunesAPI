@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useGetArtistDataQuery } from "../store/iTunesApi";
-import Input from "rsuite/Input";
+import { useRef } from "react";
+import { useLazyGetArtistDataQuery } from "../store/iTunesApi";
 import InputGroup from "rsuite/InputGroup";
 import SearchIcon from "@rsuite/icons/Search";
 import Container from "react-bootstrap/Container";
@@ -8,57 +7,50 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import OutputArtistData from "../components/OutputArtistData";
 import Loader from "../assets/Loader";
+import InputBase from "@mui/material/InputBase";
 
 const MainPage = () => {
-  const [artistName, setArtistName] = useState();
-  const [currentArtistName, setCurrentArtistName] = useState();
-  const [skip, setSkip] = useState(true);
-  const { data: artistData, isLoading } = useGetArtistDataQuery(
-    currentArtistName,
-    { skip }
-  );
-  const [localArtistData, setLocalArtistData] = useState([]);
-
-  useEffect(() => {
-    const getCurrentArtistData = async () => {
-      const interimArtistData = Object.entries(await artistData)[1];
-      setLocalArtistData(interimArtistData[1]);
-    };
-
-    getCurrentArtistData();
-  }, [artistData]);
+  const searchArtistName = useRef();
+  const [searchArtist, { data: artistDataList, isLoading }] =
+    useLazyGetArtistDataQuery();
 
   if (isLoading) return <Loader />;
 
-  const handleInput = ({ target }) => {
-    setArtistName(target.value);
+  const handleInput = (e) => {
+    searchArtistName.current = e.target.value;
   };
-
-  const renderTracks = () => <OutputArtistData localData={localArtistData} />;
 
   const handleSearch = () => {
-    if (artistName === undefined && currentArtistName === undefined) {
-      setSkip(true);
-      return;
-    }
-    setCurrentArtistName(artistName);
-    setSkip(false);
+    searchArtist(searchArtistName.current);
   };
+
+  const renderTracks = () => (
+    <OutputArtistData localData={Object.entries(artistDataList)[1][1]} />
+  );
 
   return (
     <Container>
       <Row className="py-5 d-flex flex-column">
         <Col
           className="d-flex align-items-center flex-column"
-          style={{ background: "#E8FAFF" }}
+          style={{
+            background: "#E8FAFF",
+          }}
         >
           <InputGroup className="w-25 mt-3 mb-4 d-flex justify-content-end">
-            <Input onInput={handleInput} value={artistName} />
+            <InputBase
+              sx={{
+                backgroundColor: "#fff",
+                paddingX: "10px",
+              }}
+              onChange={handleInput}
+              defaultValue={searchArtistName.current}
+            />
             <InputGroup.Button variant="light" onClick={handleSearch}>
               <SearchIcon />
             </InputGroup.Button>
           </InputGroup>
-          {currentArtistName ? (
+          {searchArtistName.current ? (
             renderTracks()
           ) : (
             <h3 className="mb-5">
