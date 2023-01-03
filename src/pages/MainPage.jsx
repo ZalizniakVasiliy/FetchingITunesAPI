@@ -21,6 +21,7 @@ const MainPage = () => {
   };
 
   const handleSearch = () => {
+    if (!searchArtistName.current) return;
     searchArtist(searchArtistName.current);
   };
 
