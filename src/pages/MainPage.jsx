@@ -1,13 +1,14 @@
 import { useRef } from "react";
 import { useLazyGetArtistDataQuery } from "../store/iTunesApi";
-import InputGroup from "rsuite/InputGroup";
-import SearchIcon from "@rsuite/icons/Search";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import OutputArtistData from "../components/OutputArtistData";
 import Loader from "../assets/Loader";
 import InputBase from "@mui/material/InputBase";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
 
 const MainPage = () => {
   const searchArtistName = useRef();
@@ -25,6 +26,13 @@ const MainPage = () => {
     searchArtist(searchArtistName.current);
   };
 
+  const handleKeyUp = (event) => {
+    if (event.key === "Enter") {
+      searchArtistName.current = event.target.value;
+      handleSearch();
+    }
+  };
+
   const renderTracks = () => (
     <OutputArtistData localData={Object.entries(artistDataList)[1][1]} />
   );
@@ -38,19 +46,27 @@ const MainPage = () => {
             background: "#E8FAFF",
           }}
         >
-          <InputGroup className="w-25 mt-3 mb-4 d-flex justify-content-end">
+          <Paper
+            component="form"
+            onSubmit={(event) => event.preventDefault()}
+            sx={{
+              margin: "20px 0 40px 0",
+            }}
+          >
             <InputBase
               sx={{
                 backgroundColor: "#fff",
                 paddingX: "10px",
+                borderRadius: "5px",
               }}
               onChange={handleInput}
+              onKeyUp={handleKeyUp}
               defaultValue={searchArtistName.current}
             />
-            <InputGroup.Button variant="light" onClick={handleSearch}>
+            <IconButton onClick={handleSearch}>
               <SearchIcon />
-            </InputGroup.Button>
-          </InputGroup>
+            </IconButton>
+          </Paper>
           {searchArtistName.current ? (
             renderTracks()
           ) : (
